@@ -1,29 +1,42 @@
 <template>
-  <div id="app">
-       <!-- <img src="https://pbs.twimg.com/profile_images/1114309924551417856/FKA4cm2x.png" alt="AWS Amplify"> -->
+<b-container class="">
+  <div id="">
+    <!-- <img src="https://pbs.twimg.com/profile_images/1114309924551417856/FKA4cm2x.png" alt="AWS Amplify"> -->
     <amplify-authenticator>
       <div class="welcome">
         <h1>Hey, {{ user.username }}!</h1>
-        <amplify-sign-out></amplify-sign-out>
+        <div>
+          <amplify-sign-out></amplify-sign-out>
+        </div>
       </div>
-      <div>
+      <div class="mt-5">
         <form v-on:submit.prevent>
-          <button @click='getTodos' class="button">GET /todos</button>
+          <b-button-group class="">
+            <b-button @click="getTodos" class="button">GET /todos</b-button>
+            <b-button @click="getTodo" class="button">GET /todos/:id</b-button>
+            <b-button @click="addTodo" class="button">POST /todos</b-button>
+            <b-button @click="updateTodo" class="button">PUT /todos</b-button>
+            <b-button @click="deleteTodo" class="button"
+              >DELETE /todos/:id</b-button
+            >
+          </b-button-group>
         </form>
       </div>
     </amplify-authenticator>
   </div>
+  </b-container>
 </template>
 
 <script>
-import { AuthState, onAuthUIStatChange } from '@aws-amplify/ui-components';
+import { AuthState, onAuthUIStatChange } from "@aws-amplify/ui-components";
+import { API } from "aws-amplify";
 
 export default {
-  name: 'App',
+  name: "App",
   data() {
     return {
-      user: { }
-    }
+      user: {},
+    };
   },
   created() {
     // Authentication state management
@@ -33,7 +46,41 @@ export default {
         this.user = user;
         console.log(user);
       }
-    })
+    });
+  },
+  methods: {
+    getTodos: function() {
+      console.log("getTodos");
+      API.get("todosApi", "/todos", {})
+        .then((result) => {
+          console.log(result);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getTodo: function() {
+
+    },
+    addTodo: function() {
+      console.log("getTodos");
+      // can use put also
+      API.post("todosApi", "/todos", {
+        body: {
+          text: "todo-1"
+        }
+      })
+        .then((result) => {
+          console.log(result);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    updateTodo: function() {
+    },
+    deleteTodo: function() {
+    },
   }
 }
 </script>
